@@ -8,7 +8,7 @@ https://www.autoitscript.com/site/autoit/downloads/
 **Note**: Currently this script only works in Windows operative system, probably (if required) in future developments the script will be translate to a crossplatform language to run it in other operative systems.
 
 ## Download script
-You can download the script from: 
+You can download the script from: https://raw.githubusercontent.com/camayal/Datataxa/master/Datataxa.au3 (Right click and Save as..). Save the script in the same folder of your list.
 
 ## Usage
 ### Prepare data file
@@ -91,10 +91,29 @@ $aRegex[1] = "(?i)etnobot|ethnobot"
 With this the script will search any title with the words **Etnobot**ánica (in Spanish) and **Ethnobot**any (in English), also any titles that include **conserv**ation or **conserv**ación. Be sure that you select your keywords properly to avoid false positives. If you search only "Etno" you can get titles like etnozoología.
 
 #### Run script in extraction mode
+The first step is run to extract the information from Genbank, for that you must be sure that the switch `$doExtraction = True;`. Be sure also that the next line or switch is `$doMetasearch = False ;`
 
+```AutoIt
+; Switches
+$doExtraction = True;<== Switch to True to do the extraction of genbank. False when extraction is finished.
+$doMetasearch = False ;<== Switch to True to do the meta search, only when the entire extraction is completed. False when extraction is in progress.
+```
+The previous instruction will do the extraction but not the metasearch (you can do the metasearch when the extraction mode is finished.
+
+To run the code from SciTE Editor go to the menu "Tools" > "Go", or simple press F5 key. You can see in the Output console (small box in the bottom of the screen the progress). While the extraction is runing you can minimize the window. If the window is closed the script will stopped, if you want to continue just open the file again with SciTE Editor and run it again (F5).
+
+The script will generate a continue.txt file (do not delete it), in case that the script halt (no internet, rejection from GenBank server, or some other problem) this file allow the script continue without loss all previous searches. Remember that the search can be slow cause Genbank policies. 
 
 #### Run script in metasearch mode
+When the extraction is fully completed just turn True the `$doMetasearch = True ;` and `$doExtraction = False;` and run the script.
 
+For example:
+```AutoIt
+; Switches
+$doExtraction = False;<== Switch to True to do the extraction of genbank. False when extraction is finished.
+$doMetasearch = True ;<== Switch to True to do the meta search, only when the entire extraction is completed. False when extraction is in progress.
+```
+This step is faster and the results will be saved in `Metasearch_in_RESULTFILE.csv`
 
 ### Configure the script in advance mode
 You can extract the metadata that you want with the script, for example: institution, authors, journal, depends of your interests, for that some changes need to be added in the script.  For that follow the commentaries in the script to modify the type of information that you want to extract. Also you would need some information about the XML structure from ENTREZ API (https://www.ncbi.nlm.nih.gov/books/NBK25497/).
