@@ -70,7 +70,7 @@ $aS[3] = "Barcoding studies"
 $aS[4] = "Diversity studies"
 $aS[5] = "Biogeography studies"
 ```
-For example in `$aS[0] = "Phylogenetic studies"` you can modify to Conservation studies resulting in a line like this: `$aS[0] = "Conservation studies"`
+In `$aS[0] = "Phylogenetic studies"` you can modify to Conservation studies resulting in a line like this: `$aS[0] = "Conservation studies"`
 
 You can put the number of categories that you want, in this example there are 6 different searches (note that the counter start in 0). If you want add or delete some searches, you need to modify the first line from: `Local $aS[6] ; ` to `Local $aS[3] ; `. This parameter inform to the script that you have three searches. 
 
@@ -119,11 +119,13 @@ With this the script will search any title with the words **Etnobot**ánica (in 
 #### Run script in extraction mode
 The first step is run to extract the information from Genbank, for that you must be sure that the switch `$doExtraction = True;`. Be sure also that the next line or switch is `$doMetasearch = False ;`
 
+For example:
 ```AutoIt
 ; Switches
 $doExtraction = True;<== Switch to True to do the extraction of genbank. False when extraction is finished.
 $doMetasearch = False ;<== Switch to True to do the meta search, only when the entire extraction is completed. False when extraction is in progress.
 ```
+
 The previous instruction will do the extraction but not the metasearch (you can do the metasearch when the extraction mode is finished.
 
 To run the code from SciTE Editor go to the menu "Tools" > "Go", or simple press F5 key. You can see in the Output console (small box in the bottom of the screen the progress). While the extraction is runing you can minimize the window. If the window is closed the script will stopped, if you want to continue just open the file again with SciTE Editor and run it again (F5).
