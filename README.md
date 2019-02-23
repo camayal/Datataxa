@@ -7,6 +7,9 @@ https://www.autoitscript.com/site/autoit/downloads/
 
 **Note**: Currently this script only works in Windows operative system, probably (if required) in future developments the script will be translate to a crossplatform language to run it in other operative systems.
 
+## Download script
+You can download the script from: 
+
 ## Usage
 ### Prepare data file
 You need a list of species. The file is a simple text file and must be located in the same folder with the script.
@@ -68,12 +71,10 @@ $aRegex[3] = "(?i)barcod|barra"
 $aRegex[4] = "(?i)genetic diversity|diversidad genética|population genetic|genética pobla|genética de pobla"
 $aRegex[5] = "(?i)biogeog"
 ```
-This can be a tricky part, you need to think in some keywords or fragments of keywords that match with your search. For th example the line: `$aRegex[0] = "(?i)phylogen|filogen|monop|monof|systemat|relationsh|sistemat|relacio"` will search a title like: 
-Molecular **phylogen**etic analysis of uniovulate Euphorbiaceae (Euphorbiaceae sensu stricto) using plastid rbcL and trnL‐F DNA sequences. 
-But will ignore titles like: 
-Synopsis of the genera and suprageneric taxa of Euphorbiaceae.
+This can be a tricky part, you need to think in some keywords or fragments of keywords that match with your search. For example the line: `$aRegex[0] = "(?i)phylogen|filogen|monop|monof|systemat|relationsh|sistemat|relacio"` will search a title like: 
+"Molecular **phylogen**etic analysis of uniovulate Euphorbiaceae (Euphorbiaceae sensu stricto) using plastid rbcL and trnL‐F DNA sequences". But will ignore titles like: "Synopsis of the genera and suprageneric taxa of Euphorbiaceae".
 
-*Do not modify the first part of the text* `(?i)` unless you know what are you doing.
+*Do not modify the first part of the line* `(?i)` unless you know what are you doing.
 
 You can include multiple keywords in your search using `|` like separator, as shown in the example. Also you can only leave one keyword.
 
@@ -96,6 +97,7 @@ With this the script will search any title with the words **Etnobot**ánica (in 
 
 
 ### Configure the script in advance mode
-You can extract the metadata that you want with the script, for example, adscription institution, authors, journal, depends of your interests, for that some changes need to be added in the script.  For that follow the commentaries in the script to modify the type of information that you want to extract.
+You can extract the metadata that you want with the script, for example: institution, authors, journal, depends of your interests, for that some changes need to be added in the script.  For that follow the commentaries in the script to modify the type of information that you want to extract. Also you would need some information about the XML structure from ENTREZ API (https://www.ncbi.nlm.nih.gov/books/NBK25497/).
+For advance Regex searches you can follow the official documentation: https://www.autoitscript.com/autoit3/docs/functions/StringRegExp.htm
 
 
