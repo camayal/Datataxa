@@ -48,8 +48,17 @@ No heading, one species per line and genus and epithet separated by a `+`.
 $oFileSp = "NAMEOFYOURFILEHERE.txt" ;<== File name (file formated Genus+species one species per line)
 $fResultFile = "RESULTFILE.csv" ;<== Define output file name
 ```
+
+For example:
+```Autoit
+;Input and output files
+$oFileSp = "listofSpeciesMex.txt" ;<== File name (file formated Genus+species one species per line)
+$fResultFile = "Results2019.csv" ;<== Define output file name
+```
+
 #### 3. Configure the keywords
 ##### 3.a. Define the titles for your columns (in the result file), modifying each name based on your interests:
+Modify the following block:
 ```Autoit
 ;Create punctual.searches
 Local $aS[6] ; <== Define number searches, this number is independent to the $aE[Number]
@@ -73,6 +82,7 @@ $aS[1] = "Etnobotany studies"
 ```
 
 ##### 3.b. Configure the patterns of your searches.
+Modify the following block:
 ```Autoit
 ;Create Regex patterns to search for each punctual.searches, please see regex documentation in: https://www.autoitscript.com/autoit3/docs/functions/StringRegExp.htm
 Local $aRegex[6] ; <== Same as punctual.searches AND IN THE SAME ORDER!
