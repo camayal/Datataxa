@@ -12,10 +12,10 @@ You can download the script from: https://raw.githubusercontent.com/camayal/Data
 
 ## Usage
 
-[Prepare data file](#prepare) 
-[Configure the script](#configure) 
-[Run script in extraction mode](#extract) 
-[Run script in metasearch mode](#meta) 
+[Prepare data file](#prepare)  
+[Configure the script](#configure)  
+[Run script in extraction mode](#extract)  
+[Run script in metasearch mode](#meta)  
 
 ---
 
