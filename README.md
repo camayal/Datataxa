@@ -11,11 +11,12 @@ https://www.autoitscript.com/site/autoit/downloads/
 You can download the script from: https://raw.githubusercontent.com/camayal/Datataxa/master/Datataxa.au3 (Right click and Save as..). Save the script in the same folder of your list.
 
 ## Usage
-
-[Prepare data file](#prepare)  
-[Configure the script](#configure)  
-[Run script in extraction mode](#extract)  
-[Run script in metasearch mode](#meta)  
+|Steps|
+|---|
+|[Prepare data file](#prepare)|  
+|[Configure the script](#configure)|  
+|[Run script in extraction mode](#extract)|  
+|[Run script in metasearch mode](#meta)|  
 
 ---
 
