@@ -11,6 +11,16 @@ https://www.autoitscript.com/site/autoit/downloads/
 You can download the script from: https://raw.githubusercontent.com/camayal/Datataxa/master/Datataxa.au3 (Right click and Save as..). Save the script in the same folder of your list.
 
 ## Usage
+
+[Prepare data file](#prepare) 
+[Configure the script](#configure) 
+[Run script in extraction mode](#extract) 
+[Run script in metasearch mode](#meta) 
+
+---
+
+<a name="prepare"/>
+
 ### Prepare data file
 You need a list of species. The file is a simple text file and must be located in the same folder with the script.
 The content of the file looks like:
@@ -27,17 +37,19 @@ Carlowrightia+venturae
 ```
 No heading, one species per line and genus and epithet separated by a `+`.
 
+---
+<a name="configure"/>
 
 ### Configure the script (to perform a search in the paper titles only)
-1. Open the script with SciTE script editor (provided by AutoIt software).
-2. Modify the following lines to be sure that the name of your file (with the list of species) are correct.
+#### 1. Open the script with SciTE script editor (provided by AutoIt software).
+#### 2. Modify the following lines to be sure that the name of your file (with the list of species) are correct.
 ```Autoit
 ;Input and output files
 $oFileSp = "NAMEOFYOURFILEHERE.txt" ;<== File name (file formated Genus+species one species per line)
 $fResultFile = "RESULTFILE.csv" ;<== Define output file name
 ```
-3. Configure the keywords
-3.a. Define the titles for your columns (in the result file), modifying each name based on your interests:
+#### 3. Configure the keywords
+##### 3.a. Define the titles for your columns (in the result file), modifying each name based on your interests:
 ```Autoit
 ;Create punctual.searches
 Local $aS[6] ; <== Define number searches, this number is independent to the $aE[Number]
@@ -60,7 +72,7 @@ $aS[0] = "Conservation studies"
 $aS[1] = "Etnobotany studies"
 ```
 
-3.b. Configure the patterns of your searches.
+##### 3.b. Configure the patterns of your searches.
 ```Autoit
 ;Create Regex patterns to search for each punctual.searches, please see regex documentation in: https://www.autoitscript.com/autoit3/docs/functions/StringRegExp.htm
 Local $aRegex[6] ; <== Same as punctual.searches AND IN THE SAME ORDER!
@@ -90,6 +102,9 @@ $aRegex[1] = "(?i)etnobot|ethnobot"
 
 With this the script will search any title with the words **Etnobot**ánica (in Spanish) and **Ethnobot**any (in English), also any titles that include **conserv**ation or **conserv**ación. Be sure that you select your keywords properly to avoid false positives. If you search only "Etno" you can get titles like etnozoología.
 
+
+<a name="extract"/>
+
 #### Run script in extraction mode
 The first step is run to extract the information from Genbank, for that you must be sure that the switch `$doExtraction = True;`. Be sure also that the next line or switch is `$doMetasearch = False ;`
 
@@ -103,6 +118,9 @@ The previous instruction will do the extraction but not the metasearch (you can 
 To run the code from SciTE Editor go to the menu "Tools" > "Go", or simple press F5 key. You can see in the Output console (small box in the bottom of the screen the progress). While the extraction is runing you can minimize the window. If the window is closed the script will stopped, if you want to continue just open the file again with SciTE Editor and run it again (F5).
 
 The script will generate a continue.txt file (do not delete it), in case that the script halt (no internet, rejection from GenBank server, or some other problem) this file allow the script continue without loss all previous searches. Remember that the search can be slow cause Genbank policies. 
+
+
+<a name="meta"/>
 
 #### Run script in metasearch mode
 When the extraction is fully completed just turn True the `$doMetasearch = True ;` and `$doExtraction = False;` and run the script.
