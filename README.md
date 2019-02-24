@@ -15,9 +15,9 @@ Save the script in the same folder of your list.
 |Steps|
 |---|
 |[Prepare data file](#prepare-data-file)|  
-|[Configure the script](#configure)|  
-|[Run script in extraction mode](#extract)|  
-|[Run script in metasearch mode](#meta)|  
+|[Configure the script](#configure-the-script-to-perform-a-search-in-the-paper-titles-only)|  
+|[Run script in extraction mode](#run-script-in-extraction-mode)|  
+|[Run script in metasearch mode](#run-script-in-metasearch-mode)|  
 
 ---
 
@@ -38,7 +38,6 @@ Carlowrightia+venturae
 No heading, one species per line and genus and epithet separated by a `+`.
 
 ---
-<a name="configure"/>
 
 ### Configure the script (to perform a search in the paper titles only)
 #### 1. Open the script with SciTE script editor (provided by AutoIt software).
@@ -114,8 +113,6 @@ $aRegex[1] = "(?i)etnobot|ethnobot"
 With this the script will search any title with the words **Etnobot**ánica (in Spanish) and **Ethnobot**any (in English), also any titles that include **conserv**ation or **conserv**ación. Be sure that you select your keywords properly to avoid false positives. If you search only "Etno" you can get titles like etnozoología.
 
 
-<a name="extract"/>
-
 #### Run script in extraction mode
 The first step is run to extract the information from Genbank, for that you must be sure that the switch `$doExtraction = True;`. Be sure also that the next line or switch is `$doMetasearch = False ;`
 
@@ -132,8 +129,6 @@ To run the code from SciTE Editor go to the menu "Tools" > "Go", or simple press
 
 The script will generate a continue.txt file (do not delete it), in case that the script halt (no internet, rejection from GenBank server, or some other problem) this file allow the script continue without loss all previous searches. Remember that the search can be slow cause Genbank policies. 
 
-
-<a name="meta"/>
 
 #### Run script in metasearch mode
 When the extraction is fully completed just turn True the `$doMetasearch = True ;` and `$doExtraction = False;` and run the script.
