@@ -8,7 +8,8 @@ https://www.autoitscript.com/site/autoit/downloads/
 **Note**: Currently this script only works in Windows operative system, probably (if required) in future developments the script will be translate to a crossplatform language to run it in other operative systems.
 
 ## Download script
-You can download the script from: https://raw.githubusercontent.com/camayal/Datataxa/master/Datataxa.au3 (Right click and Save as..). Save the script in the same folder of your list.
+You can download the script from: https://raw.githubusercontent.com/camayal/Datataxa/master/Datataxa.au3 (Right click and Save as...)
+Save the script in the same folder of your list.
 
 ## Usage
 |Steps|
@@ -23,7 +24,7 @@ You can download the script from: https://raw.githubusercontent.com/camayal/Data
 <a name="prepare"/>
 
 ### Prepare data file
-You need a list of species. The file is a simple text file and must be located in the same folder with the script.
+You need a file with a list of species. The file is a simple text file and must be located in the same folder with the script.
 The content of the file looks like:
 ```
 Anisacanthus+pumilus
@@ -43,6 +44,7 @@ No heading, one species per line and genus and epithet separated by a `+`.
 
 ### Configure the script (to perform a search in the paper titles only)
 #### 1. Open the script with SciTE script editor (provided by AutoIt software).
+
 #### 2. Modify the following lines to be sure that the name of your file (with the list of species) are correct.
 ```Autoit
 ;Input and output files
@@ -144,7 +146,9 @@ For example:
 $doExtraction = False;<== Switch to True to do the extraction of genbank. False when extraction is finished.
 $doMetasearch = True ;<== Switch to True to do the meta search, only when the entire extraction is completed. False when extraction is in progress.
 ```
-This step is faster and the results will be saved in `Metasearch_in_RESULTFILE.csv`
+This step is faster and the results will be saved in `Metasearch_in_RESULTFILE.csv` in the same folder of your species list file and results file.
+
+To run the code, in SciTE Editor, go to the menu "Tools" > "Go", or simple press F5 key. 
 
 ### Configure the script in advance mode
 You can extract the metadata that you want with the script, for example: institution, authors, journal, depends of your interests, for that some changes need to be added in the script.  For that follow the commentaries in the script to modify the type of information that you want to extract. Also you would need some information about the XML structure from ENTREZ API (https://www.ncbi.nlm.nih.gov/books/NBK25497/).
