@@ -14,14 +14,12 @@ Save the script in the same folder of your list.
 ## Usage
 |Steps|
 |---|
-|[Prepare data file](#prepare)|  
+|[Prepare data file](#prepare-data-file)|  
 |[Configure the script](#configure)|  
 |[Run script in extraction mode](#extract)|  
 |[Run script in metasearch mode](#meta)|  
 
 ---
-
-<a name="prepare"/>
 
 ### Prepare data file
 You need a file with a list of species. The file is a simple text file and must be located in the same folder with the script.
