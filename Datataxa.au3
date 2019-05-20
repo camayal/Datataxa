@@ -122,21 +122,21 @@ For $i = $cont To $nFileSpLines
 	  Local $sSpSpace = StringReplace($sSp, "+", " ") ;Replace + by space in the name of sp
 	  Local $sErroneousSp = ""
 	  ;Local $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/espell.fcgi?db=taxonomy&term=%22" & $sSp & "%22") ;Access to Espell database to correct
-
+	  sleep(400) ;Insert delay to respect GenBank Entrez limitation
 	  $oHTTP.Open("GET", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/espell.fcgi?db=taxonomy&term=%22" & $sSp & "%22", False)
 	  $oHTTP.Send()
 
-
-
+	  ;ConsoleWrite($oHTTP.ResponseText)
 
 	  $oXML.loadXML($oHTTP.ResponseText)
 	  Local $correctedSp = $oXML.SelectSingleNode("//eSpellResult/CorrectedQuery")
+	  ;ConsoleWrite($correctedSp & @CRLF)
 	  if $sSpSpace <> $correctedSp.text Then
 		 $sErroneousSp = $sSpSpace
 		 $sSp = $correctedSp.text
 	  EndIf
 
-	  ;sleep(400) ;Insert delay to respect GenBank Entrez limitation
+	  sleep(400) ;Insert delay to respect GenBank Entrez limitation
 
 	  ;Get XML from Eserch utility of Entrez API
 	  ;Local $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=1000") ;Remember this search can look syns.
@@ -144,7 +144,7 @@ For $i = $cont To $nFileSpLines
 	  $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=1000", False)
 	  $oHTTP.Send()
 
-
+	  ;ConsoleWrite($oHTTP.ResponseText)
 	  ;Get IdList elements (aka GI number)
 	  $oXML.loadXML($oHTTP.ResponseText)
 
@@ -160,10 +160,10 @@ For $i = $cont To $nFileSpLines
 			;Get detailed flatfile from GenBank in XML format for multiple accessions
 			;Local  $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $aIds & "&retmode=xml")
 
-
+			sleep(400) ;Insert delay to respect GenBank Entrez limitation
 			$oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $aIds & "&retmode=xml", False)
 			$oHTTP.Send()
-
+			;ConsoleWrite($oHTTP.ResponseText)
 
 			$oXML.loadXML($oHTTP.ResponseText) ;load xml in the object
 			$GBSeq = $oXML.SelectNodes("//GBSet/GBSeq") ; select each node (correspond to each accs. number)
