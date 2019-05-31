@@ -65,6 +65,10 @@ $aT[6] = "Searched name"
 ;Define the array element when the paper titles is saved $aT[__This Number__]
 $arrayofPaperTitles = 3
 
+;Define number of accessions  to retrieve from GenBank. Maximum 10000000.
+;This number means that if a species has 300.000 accessions (like Manihot esculenta) only first 100000 will be considered
+;Remember, Datataxa only save the progress when each species is finished.
+$retmax = 1000000
 
 ;DO NOT MODIFY BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
 ; =============================================================================================================================
@@ -100,20 +104,22 @@ EndIf
 For $i = $cont To $nFileSpLines
    ;Show progress
    ;ToolTip($i &" of "& $nFileSpLines, 0,0)
-   TraySetToolTip($i &" of "& $nFileSpLines)
-   ;ControlSetText('', '', 'Scintilla2', '')
-   ;ControlSend("[CLASS:SciTEWindow]", "", "Scintilla2", "+{F5}")
-   ConsoleWrite($i &" of "& $nFileSpLines & @CRLF)
 
-   ;Mark line in progress for restart process (script start from this point if stop exe happens)
-   FileDelete("continue.txt")
-   FileWrite("continue.txt", $i)
+;~    ControlSetText('', '', 'Scintilla2', '')
+   ;ControlSend("[CLASS:SciTEWindow]", "", "Scintilla2", "+{F5}")
+
+
+
 
    ;Clear main variable for final step array to file
    Local $finalRow = ""
 
    ;Get species from file
    $sSp = FileReadLine($oFileSp,$i)
+
+ $progressMsg = "Processing " & $sSp &" ("& $i &" of "& $nFileSpLines &")"
+   ConsoleWrite($progressMsg & @CR)
+   TraySetToolTip($progressMsg)
 
    ;Verify is sp is not empty
    if $sSp <> "" Then
@@ -141,7 +147,7 @@ For $i = $cont To $nFileSpLines
 	  ;Get XML from Eserch utility of Entrez API
 	  ;Local $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=1000") ;Remember this search can look syns.
 
-	  $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=1000", False)
+	  $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=" & $retmax, False)
 	  $oHTTP.Send()
 
 	  ;ConsoleWrite($oHTTP.ResponseText)
@@ -155,24 +161,74 @@ For $i = $cont To $nFileSpLines
 		 $oIDList = $oXML.SelectSingleNode("//eSearchResult/IdList")
 		 $aIds = StringReplace($oIDList.text, " ", ",") ;formating changing spaces by commas to put in URL of API
 
-		 ;Start searching in GenBank for  ID numbers in batch
+		 ;Create an array with all ID, 0 is the size, 1 is the first element
+		 $arrIDs = StringSplit($oIDList.text," ")
+		 ;ConsoleWrite($arrIDs[0] & @CRLF)
 
-			;Get detailed flatfile from GenBank in XML format for multiple accessions
-			;Local  $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $aIds & "&retmode=xml")
 
-			sleep(400) ;Insert delay to respect GenBank Entrez limitation
-			$oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $aIds & "&retmode=xml", False)
-			$oHTTP.Send()
-			;ConsoleWrite($oHTTP.ResponseText)
+;Split big array in 400 elements to fit into the URL to send to genbank
+for $startSublist = 1 To $arrIDs[0] Step 400
 
-			$oXML.loadXML($oHTTP.ResponseText) ;load xml in the object
-			$GBSeq = $oXML.SelectNodes("//GBSet/GBSeq") ; select each node (correspond to each accs. number)
+
+   ;If array is smaller than current endsublist (less than 400 elements), correct it (number of elements can vary depends on lenght of ID, sp. 500 items, fails, so 400 is ok for now)
+   $endSublist = $startSublist + 399
+   If $arrIDs[0] < $endSublist Then
+	   $endSublist = $arrIDs[0]
+   EndIf
+;~    ConsoleWrite($endSublist & @CR)
+
+   $progressMsg = "Processing accession batch " & Ceiling($endSublist/400) & " of " & Ceiling ($arrIDs[0]/400) & " for " & $sSp & " (" & $arrIDs[0] & " accessions)"
+   ConsoleWrite($progressMsg & @CR)
+   TraySetToolTip($progressMsg)
+
+
+
+
+
+   $sublist = _ArrayToString ($arrIDs, ",", $startSublist, $endSublist)
+   ;ConsoleWrite($sublist & @CRLF)
+
+
+;If is the first subset of id, create the final XML
+   if $startSublist == 1 Then
+	  $oFinalXML=ObjCreate("Microsoft.XMLDOM") ;create xml object
+	  $oRoot = $oFinalXML.createElement("GBSet") ;create root (exact nomenclature of GeneBank)
+	  $oRoot.setAttribute("creator",'Datataxa') ;just a note
+	  $oFinalXML.appendChild($oRoot) ;add root node to object
+   EndIf
+
+
+   ;Start searching in GenBank for  ID numbers in batch
+
+   ;Get detailed flatfile from GenBank in XML format for multiple accessions
+   ;Local  $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $aIds & "&retmode=xml")
+
+   sleep(400) ;Insert delay to respect GenBank Entrez limitation
+   $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $sublist & "&retmode=xml", False)
+   $oHTTP.Send()
+   ;ConsoleWrite($oHTTP.ResponseText)
+
+   $oXML.loadXML($oHTTP.ResponseText) ;load xml in the object
+;~ 			$oGBSeq = $oXML.SelectNodes("//GBSet/GBSeq") ; select each node (correspond to each accs. number)
+   ;copy oXML object to a new object to avoid duplication in XML
+   $osubsetXML = $oXML
+   $oGBSeq = $osubsetXML.SelectNodes("//GBSet/GBSeq") ; select each node (correspond to each accs. number)
+   $oParent = $oFinalXML.SelectSingleNode("//GBSet") ; select the parent, where the GBSeq nodes from big XML will be added
+   ;iteration for each selected noded in oXML object to add to FinalXML
+   For $eachGBSeq In $oGBSeq
+	  $oParent.appendChild($eachGBSeq)
+   Next
+
+;~ ConsoleWrite($oFinalXML.xml)
+Next
+
+
 
 			;Make a loop exploring all elements in the array E
 			For $nE In $aE
 			   Local $UnificationNode = "" ;clean variable where is written each node from each accs.
 			   ;Check each element looking for multiples nodes
-			   $x = $oXML.SelectNodes($nE)
+			   $x = $oFinalXML.SelectNodes($nE) ;select all nodes in the finalXML
 			   For $node In $x
 				  $UnificationNode &= $node.text & "|" ;add each node info separated by | for each node
 			   Next
@@ -190,6 +246,11 @@ For $i = $cont To $nFileSpLines
 			FileWrite($fResultFile, Chr(34) & $sSpSpace& Chr(34) & @CRLF)
 
 			;sleep(400) ;Insert delay to respect GenBank Entrez limitation
+
+			;Mark line in progress for restart process (script start from this point if stop exe happens)
+ 			FileDelete("continue.txt")
+			FileWrite("continue.txt", $i + 1)
+
 
 
 	  EndIf
