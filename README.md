@@ -105,7 +105,7 @@ You can include multiple keywords in your search using `|` like separator, as sh
 For example:
 ```Autoit
 ;Create Regex patterns to search for each punctual.searches, please see regex documentation in: https://www.autoitscript.com/autoit3/docs/functions/StringRegExp.htm
-Local $aRegex[6] ; <== Same as punctual.searches AND IN THE SAME ORDER!
+Local $aRegex[2] ; <== Same as punctual.searches AND IN THE SAME ORDER!
 $aRegex[0] = "(?i)conserv"
 $aRegex[1] = "(?i)etnobot|ethnobot"
 ``` 
