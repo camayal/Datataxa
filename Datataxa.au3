@@ -5,7 +5,7 @@
 ; Language ......: English
 ; Description ...: Extract information and classify it from GenBank for a list of species, using Entrez API
 ; Author ........: Carlos Alonso Maya-Lastra
-; Date ..........: March 2016 - Feb 2019
+; Date ..........: March 2016 - May 2020
 ; =============================================================================================================================
 
 
@@ -70,6 +70,12 @@ $arrayofPaperTitles = 3
 ;Remember, Datataxa only save the progress when each species is finished.
 $retmax = 1000000
 
+;Define your personal API-key to increase the number of requests per second to Genbank. Put your API-key in between quotations.
+;For more information create and NCBI account and generate an API-key here https://www.ncbi.nlm.nih.gov/account/settings/
+$api_key = "PUT_HERE_YOUR_KEY"
+
+
+
 ;DO NOT MODIFY BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
 ; =============================================================================================================================
 
@@ -82,6 +88,15 @@ $retmax = 1000000
 ;Define variables and objects
 $oXML = ObjCreate("Microsoft.XMLDOM")
 $oHTTP = ObjCreate("Msxml2.XMLHTTP.6.0")
+
+if $api_key = "PUT_HERE_YOUR_KEY" Or $api_key = "" Then
+$time = 350
+$apiInfo = ""
+Else
+$time = 110
+$apiInfo = "&api_key=" & $api_key
+EndIf
+
 
 if $doExtraction = True then
 
@@ -128,27 +143,30 @@ For $i = $cont To $nFileSpLines
 	  Local $sSpSpace = StringReplace($sSp, "+", " ") ;Replace + by space in the name of sp
 	  Local $sErroneousSp = ""
 	  ;Local $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/espell.fcgi?db=taxonomy&term=%22" & $sSp & "%22") ;Access to Espell database to correct
-	  sleep(400) ;Insert delay to respect GenBank Entrez limitation
-	  $oHTTP.Open("GET", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/espell.fcgi?db=taxonomy&term=%22" & $sSp & "%22", False)
+
+	  $oHTTP.Open("GET", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/espell.fcgi?db=taxonomy&term=%22" & $sSp & "%22" & $apiInfo, False)
 	  $oHTTP.Send()
+	  sleep($time) ;Insert delay to respect GenBank Entrez limitation
 
 	  ;ConsoleWrite($oHTTP.ResponseText)
 
 	  $oXML.loadXML($oHTTP.ResponseText)
 	  Local $correctedSp = $oXML.SelectSingleNode("//eSpellResult/CorrectedQuery")
-	  ;ConsoleWrite($correctedSp & @CRLF)
-	  if $sSpSpace <> $correctedSp.text Then
-		 $sErroneousSp = $sSpSpace
-		 $sSp = $correctedSp.text
+	  if StringLen($correctedSp.text) > 0 Then
+		 if $sSpSpace <> $correctedSp.text Then
+			$sErroneousSp = $sSpSpace
+			$sSp = $correctedSp.text
+		 EndIf
 	  EndIf
 
-	  sleep(400) ;Insert delay to respect GenBank Entrez limitation
+
 
 	  ;Get XML from Eserch utility of Entrez API
 	  ;Local $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=1000") ;Remember this search can look syns.
 
-	  $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=" & $retmax, False)
+	  $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22" & $sSp & "%22[Organism]&retmax=" & $retmax & $apiInfo, False)
 	  $oHTTP.Send()
+	  sleep($time) ;Insert delay to respect GenBank Entrez limitation
 
 	  ;ConsoleWrite($oHTTP.ResponseText)
 	  ;Get IdList elements (aka GI number)
@@ -203,9 +221,10 @@ for $startSublist = 1 To $arrIDs[0] Step 400
    ;Get detailed flatfile from GenBank in XML format for multiple accessions
    ;Local  $sXML = HttpPost("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $aIds & "&retmode=xml")
 
-   sleep(400) ;Insert delay to respect GenBank Entrez limitation
-   $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $sublist & "&retmode=xml", False)
+
+   $oHTTP.Open("POST", "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=" & $sublist & "&retmode=xml" & $apiInfo, False)
    $oHTTP.Send()
+   sleep($time) ;Insert delay to respect GenBank Entrez limitation
    ;ConsoleWrite($oHTTP.ResponseText)
 
    $oXML.loadXML($oHTTP.ResponseText) ;load xml in the object
