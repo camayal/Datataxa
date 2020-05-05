@@ -147,4 +147,9 @@ To run the code, in SciTE Editor, go to the menu "Tools" > "Go", or simple press
 You can extract the metadata that you want with the script, for example: institution, authors, journal, depends of your interests, for that some changes need to be added in the script.  For that follow the commentaries in the script to modify the type of information that you want to extract. Also you would need some information about the XML structure from ENTREZ API (https://www.ncbi.nlm.nih.gov/books/NBK25497/).
 For advance Regex searches you can follow the official documentation: https://www.autoitscript.com/autoit3/docs/functions/StringRegExp.htm
 
-
+If you have and API-key you can use it to speed up the extraction. To do it in ADVANCE USER AREA you can declare your API-key:
+```AutoIt
+;Define your personal API-key to increase the number of requests per second to Genbank. Put your API-key in between quotations.
+;For more information create and NCBI account and generate an API-key here https://www.ncbi.nlm.nih.gov/account/settings/
+$api_key = "PUT_HERE_YOUR_KEY"
+```
