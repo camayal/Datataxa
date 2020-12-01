@@ -17,7 +17,7 @@ $doExtraction = True;<== Switch to True to do the extraction of genbank. False w
 $doMetasearch = False ;<== Switch to True to do the meta search, only when the entire extraction is completed. False when extraction is in progress.
 
 ;Input and output files
-$oFileSp = "NAMEOFYOURFILEHERE.txt" ;<== File name (file formated Genus+species one species per line)
+$oFileSp = "YOURSPECIESFILEHERE.txt" ;<== File name (file formated Genus+species one species per line)
 $fResultFile = "RESULTFILE.csv" ;<== Define output file name
 
 ;Create punctual.searches
